@@ -15,8 +15,8 @@ class TransactionController extends Controller
         }
         
         if (!isset($_SESSION['user_id'])) {
-            echo "Silakan login terlebih dahulu";
-            return;
+            header('Location: /#menu');
+            exit();
         }
         
         $total = $_POST['total'];

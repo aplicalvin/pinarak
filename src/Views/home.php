@@ -328,7 +328,7 @@
           <div class="payment-methods">
             <!-- E-Wallet -->
             <div class="payment-method">
-              <input type="radio" id="ewallet" name="payment_method" value="ewallet">
+              <input type="radio" id="ewallet" name="payment_method" value="ewallet" required>
               <label for="ewallet" class="payment-label">
                 <div class="payment-icon">
                   <i data-feather="smartphone"></i>
@@ -345,7 +345,7 @@
 
             <!-- Bank Transfer -->
             <div class="payment-method">
-              <input type="radio" id="bank" name="payment_method" value="bank">
+              <input type="radio" id="bank" name="payment_method" value="bank" required>
               <label for="bank" class="payment-label">
                 <div class="payment-icon">
                   <i data-feather="credit-card"></i>
@@ -362,7 +362,7 @@
 
             <!-- COD -->
             <div class="payment-method">
-              <input type="radio" id="cod" name="payment_method" value="cod">
+              <input type="radio" id="cod" name="payment_method" value="cod" required>
               <label for="cod" class="payment-label">
                 <div class="payment-icon">
                   <i data-feather="dollar-sign"></i>
