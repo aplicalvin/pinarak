@@ -80,7 +80,9 @@ const checkoutBtn = document.querySelector('#checkout-button');
 const paymentModal = document.querySelector('#payment-modal');
 const closePaymentModal = paymentModal.querySelector('.close-icon');
 
-paymentModal.style.display = 'none';
+window.onload = () => {
+  paymentModal.style.display = 'none';
+}
 
 checkoutBtn.onclick = (e) => {
   paymentModal.style.display = 'flex';
