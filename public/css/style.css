@@ -130,6 +130,8 @@ body {
   background-color: #fff;
   color: var(--bg);
   transition: 0.3s;
+  overflow-y: auto;
+  padding-bottom: 10rem;
 }
 
 .shopping-cart.active {
@@ -168,6 +170,38 @@ body {
 
 .shopping-cart .remove-item:hover {
   color: var(--primary);
+}
+
+.checkout-container {
+  padding: 1rem;
+  border-top: 1px solid #eee;
+  margin-top: 1rem;
+}
+
+.cart-total {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: right;
+}
+
+.checkout-button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: var(--bg);
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: 0.3s;
+}
+
+.checkout-button:hover {
+  background-color: var(--primary);
 }
 
 /* Hero Section */
@@ -322,7 +356,7 @@ body {
   display: flex;
   flex-wrap: wrap;
   margin-top: 5rem;
-  justify-content: center;
+  justify-content: space-evenly;
 }
 
 .menu .row .menu-card {
@@ -332,11 +366,23 @@ body {
 
 .menu .row .menu-card img {
   border-radius: 50%;
-  width: 80%;
+  width: 260px;
+  height: 260px;
 }
 
 .menu .row .menu-card .menu-card-title {
   margin: 1rem auto 0.5rem;
+}
+
+.menu .menu-card .menu-card-button {
+  width: 4rem;
+  height: 4rem;
+  color: var(--bg);
+  margin: 0.3rem;
+  border: 1px solid #666;
+  border-radius: 50%;
+  cursor: pointer;
+  text-align: center;
 }
 
 /* Products Section */
@@ -369,6 +415,23 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.products .product-icons .product-button-cart {
+  width: 4rem;
+  height: 4rem;
+  margin: 0.3rem;
+  border-radius: 50%;
+  cursor: pointer;
+  text-align: center;
+  background-color: var(--bg);
+  border: 1px solid #666;
+  color: white;
+}
+
+.products .product-icons .product-button-cart:hover {
+  background-color: var(--primary);
+  border: 1px solid var(--primary);
 }
 
 .products .product-icons a:hover {
@@ -563,6 +626,156 @@ footer .credit a {
   color: #fff;
   margin-top: 1rem;
   padding: 1rem 1.6rem;
+}
+
+/* Payment Modal Styles */
+.modal-payment {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Tambahkan flexbox untuk centering */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-payment-container {
+  background-color: #fff;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 90%;
+  padding: 2rem;
+  position: relative;
+  animation: slideIn 0.3s ease;
+}
+
+.payment-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  margin-right: 2rem;
+}
+
+.payment-header h3 {
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.payment-total {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.payment-methods {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.payment-method {
+  position: relative;
+}
+
+.payment-method input[type="radio"] {
+  display: none;
+}
+
+.payment-label {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 2px solid #ddd;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.payment-method input[type="radio"]:checked+.payment-label {
+  border-color: #b6895b;
+  background-color: #fff8f3;
+}
+
+.payment-icon {
+  background-color: #f5f5f5;
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  margin-right: 1rem;
+}
+
+.payment-icon i {
+  color: #b6895b;
+}
+
+.payment-info {
+  flex: 1;
+}
+
+.payment-title {
+  display: block;
+  font-weight: 600;
+  color: #333;
+}
+
+.payment-description {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.payment-check {
+  display: none;
+  color: #b6895b;
+}
+
+.payment-method input[type="radio"]:checked+.payment-label .payment-check {
+  display: block;
+}
+
+.payment-footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.payment-note {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.payment-button {
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #b6895b;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.payment-button:hover {
+  background-color: #a67b4e;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 /* Media Queries */

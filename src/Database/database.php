@@ -26,14 +26,8 @@ class Database
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function insert(string $table, array $data): bool
+    public function lastInsertId()
     {
-        $columns = implode(', ', array_keys($data));
-        $values = implode(', ', array_fill(0, count($data), '?'));
-        
-        $query = "INSERT INTO {$table} ({$columns}) VALUES ({$values})";
-        
-        $stmt = $this->pdo->prepare($query);
-        return $stmt->execute(array_values($data));
+        return $this->pdo->lastInsertId();
     }
 }

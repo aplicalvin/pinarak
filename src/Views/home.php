@@ -34,9 +34,9 @@
       <a href="#menu">Menu</a>
       <a href="#products">Produk</a>
       <a href="#contact">Kontak</a>
-      <?php if (isset($_SESSION['user_id'])) : ?>
+      <?php if (isset($_SESSION['user_id'])): ?>
         <a href="/logout">Logout</a>
-      <?php else : ?>
+      <?php else: ?>
         <a href="/login">Login</a>
         <a href="/register">Register</a>
       <?php endif; ?>
@@ -57,30 +57,46 @@
 
     <!-- Shopping Cart start -->
     <div class="shopping-cart">
-      <div class="cart-item">
-        <img src="img/products/1.jpg" alt="Product 1" />
-        <div class="item-detail">
-          <h3>Product 1</h3>
-          <div class="item-price">IDR 30K</div>
+      <?php if (empty($carts)): ?>
+        <p>Keranjang kosong</p>
+      <?php else: ?>
+        <?php foreach ($carts as $cart): ?>
+          <?php
+          if (isset($_SESSION['session_id'])) {
+            $sessionId = $_SESSION['session_id'];
+          }
+          $productId = $cart->getProductId();
+          $productInfo = $cartProducts[$productId];
+          ?>
+          <div class="cart-item">
+            <img src="<?= $productInfo['image'] ?>" alt="<?= $productInfo['name'] ?>" />
+            <div class="item-detail">
+              <h3><?= $productInfo['name'] ?></h3>
+              <div class="item-price">IDR <?= number_format($productInfo['price'], 0, ',', '.') ?></div>
+              <div class="item-quantity"><?= $cart->getQuantity() ?> item</div>
+            </div>
+            <form action="/remove-from-cart" method="post">
+              <input type="hidden" name="cart_id" value="<?= $cart->getId() ?>">
+              <input type="hidden" name="product_price" value="<?= $productInfo['price'] ?>">
+              <button type="submit" class="remove-item"><i data-feather="trash-2"></i></button>
+            </form>
+          </div>
+        <?php endforeach; ?>
+        <div class="checkout-container">
+          <?php
+          $total = 0;
+          foreach ($carts as $cart) {
+            $total += $cartProducts[$cart->getProductId()]['price'] * $cart->getQuantity();
+          }
+          ?>
+          <div class="cart-total">
+            Total: IDR <?= number_format($total, 0, ',', '.') ?>
+          </div>
+          <button type="button" class="checkout-button" id="checkout-button">
+            Checkout <i data-feather="shopping-bag"></i>
+          </button>
         </div>
-        <i data-feather="trash-2" class="remove-item"></i>
-      </div>
-      <div class="cart-item">
-        <img src="img/products/1.jpg" alt="Product 1" />
-        <div class="item-detail">
-          <h3>Product 1</h3>
-          <div class="item-price">IDR 30K</div>
-        </div>
-        <i data-feather="trash-2" class="remove-item"></i>
-      </div>
-      <div class="cart-item">
-        <img src="img/products/1.jpg" alt="Product 1" />
-        <div class="item-detail">
-          <h3>Product 1</h3>
-          <div class="item-price">IDR 30K</div>
-        </div>
-        <i data-feather="trash-2" class="remove-item"></i>
-      </div>
+      <?php endif; ?>
     </div>
     <!-- Shopping Cart end -->
   </nav>
@@ -129,36 +145,27 @@
     </p>
 
     <div class="row">
-      <div class="menu-card">
-        <img src="img/menu/1.jpg" alt="Espresso" class="menu-card-img" />
-        <h3 class="menu-card-title">- Espresso -</h3>
-        <p class="menu-card-price">IDR 15K</p>
-      </div>
-      <div class="menu-card">
-        <img src="img/menu/1.jpg" alt="Espresso" class="menu-card-img" />
-        <h3 class="menu-card-title">- Capuccino -</h3>
-        <p class="menu-card-price">IDR 25K</p>
-      </div>
-      <div class="menu-card">
-        <img src="img/menu/1.jpg" alt="Espresso" class="menu-card-img" />
-        <h3 class="menu-card-title">- Latte -</h3>
-        <p class="menu-card-price">IDR 20K</p>
-      </div>
-      <div class="menu-card">
-        <img src="img/menu/1.jpg" alt="Espresso" class="menu-card-img" />
-        <h3 class="menu-card-title">- Espresso -</h3>
-        <p class="menu-card-price">IDR 15K</p>
-      </div>
-      <div class="menu-card">
-        <img src="img/menu/1.jpg" alt="Espresso" class="menu-card-img" />
-        <h3 class="menu-card-title">- Espresso -</h3>
-        <p class="menu-card-price">IDR 15K</p>
-      </div>
-      <div class="menu-card">
-        <img src="img/menu/1.jpg" alt="Espresso" class="menu-card-img" />
-        <h3 class="menu-card-title">- Espresso -</h3>
-        <p class="menu-card-price">IDR 15K</p>
-      </div>
+      <?php foreach ($products as $product): ?>
+        <?php if ($product->getType() === 'menu'): ?>
+          <div class="menu-card">
+            <img src="<?= $product->getImage() ?>" alt="<?= $product->getName() ?>" class="menu-card-img" />
+            <h3 class="menu-card-title">- <?= $product->getName() ?> -</h3>
+            <p class="menu-card-price">IDR <?= number_format($product->getPrice(), 0, ',', '.') ?></p>
+            <?php if (isset($_SESSION['user_id'])): ?>
+              <form action="/add-to-cart" method="post">
+                <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
+                <input type="hidden" name="quantity" value="1">
+                <input type="hidden" name="price" value="<?= $product->getPrice() ?>">
+                <button type="submit" class="menu-card-button"><i data-feather="shopping-cart"></i></button>
+              </form>
+            <?php else: ?>
+              <button type="button" class="menu-card-button"
+                onclick="alert('Silahkan login terlebih dahulu untuk menambahkan ke keranjang')"><i
+                  data-feather="shopping-cart"></i></button>
+            <?php endif; ?>
+          </div>
+        <?php endif; ?>
+      <?php endforeach; ?>
     </div>
   </section>
   <!-- Menu Section end -->
@@ -172,66 +179,43 @@
     </p>
 
     <div class="row">
-      <div class="product-card">
-        <div class="product-icons">
-          <a href="#"><i data-feather="shopping-cart"></i></a>
-          <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-        </div>
-        <div class="product-image">
-          <img src="img/products/1.jpg" alt="Product 1" />
-        </div>
-        <div class="product-content">
-          <h3>Coffee Beans 1</h3>
-          <div class="product-stars">
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star"></i>
+      <?php foreach ($products as $product): ?>
+        <?php if ($product->getType() === 'product'): ?>
+          <div class="product-card">
+            <div class="product-icons">
+              <?php if (isset($_SESSION['user_id'])): ?>
+                <form action="/add-to-cart" method="post">
+                  <input type="hidden" name="product_id" value="<?= $product->getId() ?>">
+                  <input type="hidden" name="quantity" value="1">
+                  <input type="hidden" name="price" value="<?= $product->getPrice() ?>">
+                  <button type="submit" class="product-button-cart"><i data-feather="shopping-cart"></i></button>
+                </form>
+              <?php else: ?>
+                <button type="button" class="product-button-cart"
+                  onclick="alert('Silahkan login terlebih dahulu untuk menambahkan ke keranjang')"><i
+                    data-feather="shopping-cart"></i></button>
+              <?php endif; ?>
+              <a href="#" class="item-detail-button" data-product-id="<?= $product->getId() ?>"><i
+                  data-feather="eye"></i></a>
+            </div>
+            <div class="product-image">
+              <img src="<?= $product->getImage() ?>" alt="<?= $product->getName() ?>" />
+            </div>
+            <div class="product-content">
+              <h3><?= $product->getName() ?></h3>
+              <div class="product-stars">
+                <?php for ($i = 0; $i < $product->getRating(); $i++): ?>
+                  <i data-feather="star" class="star-full"></i>
+                <?php endfor; ?>
+                <?php for ($i = 0; $i < 5 - $product->getRating(); $i++): ?>
+                  <i data-feather="star"></i>
+                <?php endfor; ?>
+              </div>
+              <div class="product-price">IDR <?= number_format($product->getPrice(), 0, ',', '.') ?></div>
+            </div>
           </div>
-          <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-icons">
-          <a href="#"><i data-feather="shopping-cart"></i></a>
-          <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-        </div>
-        <div class="product-image">
-          <img src="img/products/1.jpg" alt="Product 1" />
-        </div>
-        <div class="product-content">
-          <h3>Coffee Beans 1</h3>
-          <div class="product-stars">
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-          </div>
-          <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-        </div>
-      </div>
-      <div class="product-card">
-        <div class="product-icons">
-          <a href="#"><i data-feather="shopping-cart"></i></a>
-          <a href="#" class="item-detail-button"><i data-feather="eye"></i></a>
-        </div>
-        <div class="product-image">
-          <img src="img/products/1.jpg" alt="Product 1" />
-        </div>
-        <div class="product-content">
-          <h3>Coffee Beans 1</h3>
-          <div class="product-stars">
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-            <i data-feather="star"></i>
-          </div>
-          <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-        </div>
-      </div>
+        <?php endif; ?>
+      <?php endforeach; ?>
     </div>
   </section>
   <!-- Products Section end -->
@@ -295,30 +279,119 @@
   <div class="modal" id="item-detail-modal">
     <div class="modal-container">
       <a href="#" class="close-icon"><i data-feather="x"></i></a>
-      <div class="modal-content">
-        <img src="img/products/1.jpg" alt="Product 1" />
-        <div class="product-content">
-          <h3>Product 1</h3>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Provident, tenetur cupiditate facilis obcaecati ullam maiores
-            minima quos perspiciatis similique itaque, esse rerum eius
-            repellendus voluptatibus!
-          </p>
-          <div class="product-stars">
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star" class="star-full"></i>
-            <i data-feather="star"></i>
+      <?php foreach ($products as $product): ?>
+        <?php if ($product->getType() === 'product'): ?>
+          <div class="modal-content" data-product-id="<?= $product->getId() ?>">
+            <img src="<?= $product->getImage() ?>" alt="<?= $product->getName() ?>" />
+            <div class="product-content">
+              <h3><?= $product->getName() ?></h3>
+              <p>
+                <?= $product->getDescription() ?>
+              </p>
+              <div class="product-stars">
+                <?php for ($i = 0; $i < $product->getRating(); $i++): ?>
+                  <i data-feather="star" class="star-full"></i>
+                <?php endfor; ?>
+                <?php for ($i = 0; $i < 5 - $product->getRating(); $i++): ?>
+                  <i data-feather="star"></i>
+                <?php endfor; ?>
+              </div>
+              <div class="product-price">IDR <?= $product->getPrice() ?> <span>IDR <?= $product->getPrice() ?></span></div>
+              <a href="#"><i data-feather="shopping-cart"></i> <span>add to cart</span></a>
+            </div>
           </div>
-          <div class="product-price">IDR 30K <span>IDR 55K</span></div>
-          <a href="#"><i data-feather="shopping-cart"></i> <span>add to cart</span></a>
-        </div>
-      </div>
+        <?php endif; ?>
+      <?php endforeach; ?>
     </div>
   </div>
   <!-- Modal Box Item Detail end -->
+
+  <!-- Payment Method Modal start -->
+  <div class="modal-payment" id="payment-modal">
+    <div class="modal-payment-container">
+      <a href="#" class="close-icon"><i data-feather="x"></i></a>
+      <div class="modal-content">
+        <?php
+        $cartId = [];
+        $total = 0;
+        foreach ($carts as $cart) {
+          $total += $cartProducts[$cart->getProductId()]['price'] * $cart->getQuantity();
+          $cartId[] = $cart->getId();
+        }
+        ?>
+        <div class="payment-header">
+          <h3>Pilih Metode Pembayaran</h3>
+          <p class="payment-total">Total: IDR <span id="modal-total"><?= number_format($total, 0, ',', '.') ?></span></p>
+        </div>
+
+        <form action="/checkout" method="post">
+          <div class="payment-methods">
+            <!-- E-Wallet -->
+            <div class="payment-method">
+              <input type="radio" id="ewallet" name="payment_method" value="ewallet">
+              <label for="ewallet" class="payment-label">
+                <div class="payment-icon">
+                  <i data-feather="smartphone"></i>
+                </div>
+                <div class="payment-info">
+                  <span class="payment-title">E-Wallet</span>
+                  <span class="payment-description">OVO, GoPay, DANA, LinkAja</span>
+                </div>
+                <div class="payment-check">
+                  <i data-feather="check-circle"></i>
+                </div>
+              </label>
+            </div>
+
+            <!-- Bank Transfer -->
+            <div class="payment-method">
+              <input type="radio" id="bank" name="payment_method" value="bank">
+              <label for="bank" class="payment-label">
+                <div class="payment-icon">
+                  <i data-feather="credit-card"></i>
+                </div>
+                <div class="payment-info">
+                  <span class="payment-title">Transfer Bank</span>
+                  <span class="payment-description">BCA, Mandiri, BNI, BRI</span>
+                </div>
+                <div class="payment-check">
+                  <i data-feather="check-circle"></i>
+                </div>
+              </label>
+            </div>
+
+            <!-- COD -->
+            <div class="payment-method">
+              <input type="radio" id="cod" name="payment_method" value="cod">
+              <label for="cod" class="payment-label">
+                <div class="payment-icon">
+                  <i data-feather="dollar-sign"></i>
+                </div>
+                <div class="payment-info">
+                  <span class="payment-title">Cash on Delivery</span>
+                  <span class="payment-description">Bayar saat pesanan tiba</span>
+                </div>
+                <div class="payment-check">
+                  <i data-feather="check-circle"></i>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="payment-footer">
+            <p class="payment-note">* Pilih salah satu metode pembayaran di atas</p>
+            <input type="hidden" name="total" value="<?= $total ?>">
+            <input type="hidden" name="cart_ids" value="<?= implode(',', $cartId) ?>">
+            <button type="submit" class="btn payment-button">
+              <i data-feather="lock"></i>
+              Lanjutkan Pembayaran
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Payment Method Modal end -->
 
   <!-- Feather Icons -->
   <script>

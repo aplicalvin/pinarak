@@ -4,6 +4,7 @@ namespace App\Routes;
 
 use App\Controller\AuthController;
 use App\Controller\HomeController;
+use App\Controller\TransactionController;
 use App\Router;
 
 $router = new Router();
@@ -14,5 +15,8 @@ $router->post('/login', AuthController::class, 'login');
 $router->get('/register', AuthController::class, 'registerPage');
 $router->post('/register', AuthController::class, 'register');
 $router->get('/logout', AuthController::class, 'logout');
+$router->post('/add-to-cart', HomeController::class, 'addToCart');
+$router->post('/remove-from-cart', HomeController::class, 'removeFromCart');
+$router->post('/checkout', TransactionController::class, 'checkout');
 
 $router->dispatch();

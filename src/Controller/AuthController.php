@@ -48,7 +48,7 @@ class AuthController extends Controller
             return;
         }
 
-        $db = new Database('localhost', 'pinarak_coffe', 'root', '');
+        $db = new Database($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
         
         $checkEmailQuery = "SELECT email FROM users WHERE email = :email";
         $result = $db->query($checkEmailQuery, [
@@ -92,7 +92,7 @@ class AuthController extends Controller
             return;
         }
 
-        $db = new Database('localhost', 'pinarak_coffe', 'root', '');
+        $db = new Database($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
         $query = "SELECT * FROM users WHERE email = :email AND password = :password";
         $result = $db->query($query, [
             'email' => $user->getEmail(),
@@ -118,7 +118,9 @@ class AuthController extends Controller
             session_start();
         }
 
-        session_destroy();
+        unset($_SESSION['user_id']);
+        unset($_SESSION['user_email']);
+        unset($_SESSION['user_name']);
         
         header('Location: /');
     }

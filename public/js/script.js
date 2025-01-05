@@ -44,11 +44,21 @@ document.addEventListener('click', function (e) {
 // Modal Box
 const itemDetailModal = document.querySelector('#item-detail-modal');
 const itemDetailButtons = document.querySelectorAll('.item-detail-button');
+const modalContents = itemDetailModal.querySelectorAll('.modal-content');
 
 itemDetailButtons.forEach((btn) => {
   btn.onclick = (e) => {
-    itemDetailModal.style.display = 'flex';
-    e.preventDefault();
+    // e.preventDefault();
+    const productId = this.getAttribute('data-product-id');
+
+    // modalContents.forEach(content => {
+    //   content.style.display = 'none';
+    // });
+
+    const targetContent = modal.querySelector(`.modal-content[data-product-id="${productId}"]`);
+    if (targetContent) {
+      targetContent.style.display = 'flex';
+    }
   };
 });
 
@@ -65,4 +75,26 @@ window.onclick = (e) => {
   }
 };
 
-// Login
+// klik tombol checkout
+const checkoutBtn = document.querySelector('#checkout-button');
+const paymentModal = document.querySelector('#payment-modal');
+const closePaymentModal = paymentModal.querySelector('.close-icon');
+
+paymentModal.style.display = 'none';
+
+checkoutBtn.onclick = (e) => {
+  paymentModal.style.display = 'flex';
+  shoppingCart.classList.toggle('active');
+  e.preventDefault();
+}
+
+closePaymentModal.onclick = (e) => {
+  e.preventDefault();
+  paymentModal.style.display = 'none';
+}
+
+window.onclick = (e) => {
+  if (e.target === paymentModal) {
+    paymentModal.style.display = 'none';
+  }
+}
