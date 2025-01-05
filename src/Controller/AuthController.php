@@ -7,7 +7,7 @@ use App\Model\User;
 
 class AuthController extends Controller
 {
-    public function index(): void
+    public function loginPage(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
