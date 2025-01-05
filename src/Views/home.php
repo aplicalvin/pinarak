@@ -308,7 +308,7 @@
   <!-- Modal Box Item Detail end -->
 
   <!-- Payment Method Modal start -->
-  <div class="modal-payment" id="payment-modal">
+  <div class="modal-payment" id="payment-modal" style="display: none;">
     <div class="modal-payment-container">
       <a href="#" class="close-icon"><i data-feather="x"></i></a>
       <div class="modal-content">

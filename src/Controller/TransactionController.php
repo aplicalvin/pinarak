@@ -51,7 +51,7 @@ class TransactionController extends Controller
                 'cart_id' => $cartId
             ]);
         }
-        header('Location: /#menu');
+        header('Location: /transaction');
         exit();
     }
 

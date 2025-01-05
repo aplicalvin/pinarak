@@ -93,6 +93,18 @@ class HomeController extends Controller
         if (!isset($_SESSION['session_id'])) {
             $_SESSION['session_id'] = uniqid("cart_");
         }
+
+        $productId = filter_var($_POST['product_id'], FILTER_VALIDATE_INT);
+        $quantity = filter_var($_POST['quantity'], FILTER_VALIDATE_INT);
+        $price = filter_var($_POST['price'], FILTER_VALIDATE_FLOAT);
+
+        if ($productId === false || $quantity === false || $price === false || $quantity <= 0 || $price <= 0) {
+            error_log("Invalid cart input - Product: {$_POST['product_id']}, Quantity: {$_POST['quantity']}, Price: {$_POST['price']}");
+            header('Location: /#menu');
+            exit();
+        }
+
+        $userId = $_SESSION['user_id'];
         $sessionId = $_SESSION['session_id'];
         $productId = $_POST['product_id'];
         $quantity = $_POST['quantity'];
@@ -100,30 +112,37 @@ class HomeController extends Controller
         $userId = $_SESSION['user_id'];
         $subtotal = $quantity * $price;
 
-        $cart = new Cart(0, $sessionId, $userId, $productId, $quantity, $subtotal, 'active');
-        $db = new Database($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
-
-        $query = "INSERT INTO carts (session_id, user_id, product_id, quantity, sub_total, cart_status) 
-                 VALUES (:session_id, :user_id, :product_id, :quantity, :sub_total, :cart_status) 
-                 ON DUPLICATE KEY UPDATE 
-                    quantity = CASE 
-                        WHEN cart_status != 'active' THEN VALUES(quantity)
-                        ELSE quantity + VALUES(quantity)
-                    END,
-                    sub_total = CASE 
-                        WHEN cart_status != 'active' THEN VALUES(sub_total)
-                        ELSE sub_total + VALUES(sub_total)
-                    END,
-                    cart_status = 'active'";
+        try {
+            $cart = new Cart(0, $sessionId, $userId, $productId, $quantity, $subtotal, 'active');
+            $db = new Database($_ENV['DB_HOST'], $_ENV['DB_NAME'], $_ENV['DB_USER'], $_ENV['DB_PASSWORD']);
+            
+            $query = "INSERT INTO carts (session_id, user_id, product_id, quantity, sub_total, cart_status) 
+                     VALUES (:session_id, :user_id, :product_id, :quantity, :sub_total, :cart_status) 
+                     ON DUPLICATE KEY UPDATE 
+                        quantity = CASE 
+                            WHEN cart_status != 'active' THEN VALUES(quantity)
+                            ELSE quantity + VALUES(quantity)
+                        END,
+                        sub_total = CASE 
+                            WHEN cart_status != 'active' THEN VALUES(sub_total)
+                            ELSE sub_total + VALUES(sub_total)
+                        END,
+                        cart_status = 'active'";
+            
+            $db->query($query, [
+                'session_id' => $cart->getSessionId(),
+                'user_id' => $cart->getUserId(),
+                'product_id' => $cart->getProductId(),
+                'quantity' => $cart->getQuantity(),
+                'sub_total' => $cart->getSubtotal(),
+                'cart_status' => $cart->getStatus()
+            ]);
+        } catch (\Exception $e) {
+            error_log("Error adding to cart: " . $e->getMessage());
+            header('Location: /#menu');
+            exit();
+        }
         
-        $db->query($query, [
-            'session_id' => $cart->getSessionId(),
-            'user_id' => $cart->getUserId(),
-            'product_id' => $cart->getProductId(),
-            'quantity' => $cart->getQuantity(),
-            'sub_total' => $cart->getSubtotal(),
-            'cart_status' => $cart->getStatus()
-        ]);
         header('Location: /#menu');
         exit();
     }
