@@ -18,5 +18,6 @@ $router->get('/logout', AuthController::class, 'logout');
 $router->post('/add-to-cart', HomeController::class, 'addToCart');
 $router->post('/remove-from-cart', HomeController::class, 'removeFromCart');
 $router->post('/checkout', TransactionController::class, 'checkout');
+$router->get('/transaction', TransactionController::class, 'getTransaction');
 
 $router->dispatch();

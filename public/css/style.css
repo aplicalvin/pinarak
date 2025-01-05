@@ -1093,3 +1093,160 @@ footer .credit a {
     font-size: 0.8rem;
   }
 }
+
+/* Transaction */
+.transaction {
+  padding: 8rem 7% 1.4rem;
+}
+
+.transaction h2 {
+  text-align: center;
+  font-size: 2.6rem;
+  margin-bottom: 3rem;
+}
+
+.transaction h2 span {
+  color: var(--primary);
+}
+
+.transaction-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.transaction-card {
+  background-color: white;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.transaction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-id {
+  font-weight: bold;
+  color: var(--primary);
+}
+
+.transaction-date {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.transaction-items {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+}
+
+.item-name {
+  flex: 1;
+}
+
+.item-quantity {
+  color: #666;
+  margin: 0 1rem;
+}
+
+.item-price {
+  font-weight: 500;
+  min-width: 120px;
+  text-align: right;
+}
+
+.transaction-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.transaction-total {
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.transaction-status {
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.transaction-status.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.transaction-status.completed {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.transaction-status.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.empty-transaction {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  padding: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .transaction {
+    padding: 8rem 5% 1.4rem;
+  }
+
+  .transaction-card {
+    padding: 1.5rem;
+  }
+
+  .transaction h2 {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 450px) {
+  .transaction {
+    padding: 8rem 3% 1.4rem;
+  }
+
+  .transaction-card {
+    padding: 1rem;
+  }
+
+  .transaction h2 {
+    font-size: 1.8rem;
+  }
+
+  .transaction-item {
+    font-size: 0.9rem;
+  }
+
+  .item-price {
+    min-width: 100px;
+  }
+}

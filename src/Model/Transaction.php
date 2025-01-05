@@ -10,6 +10,7 @@ class Transaction
     private $amount;
     private $date;
     private $status;
+    private $items = [];
 
     public function __construct($id, $userId, $invoice, $amount, $date, $status)
     {
@@ -49,5 +50,15 @@ class Transaction
     public function getStatus()
     {
         return $this->status;
+    }
+
+    public function setItems(array $items): void 
+    {
+        $this->items = $items;
+    }
+
+    public function getItems(): array
+    {
+        return $this->items;
     }
 }

@@ -35,6 +35,7 @@
       <a href="#products">Produk</a>
       <a href="#contact">Kontak</a>
       <?php if (isset($_SESSION['user_id'])): ?>
+        <a href="/transaction">Transaksi</a>
         <a href="/logout">Logout</a>
       <?php else: ?>
         <a href="/login">Login</a>
